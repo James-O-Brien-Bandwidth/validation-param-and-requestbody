@@ -10,12 +10,32 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @Validated
 public class BookController {
+
+    //Guide: https://mkyong.com/spring-boot/spring-rest-validation-example/
+
+    //Controller level:
+    //1. Fully validates input parameter PRIMITIVE variables, as well as input parameter OBJECT variables.
+        //a -> PRIMITIVE variables through annotations like: @Min, required, etc
+        //b -> OBJECT variables through VO annotations like @NotEmpty, as well as custom ones like: @Author
+    //2. Using Optional to return exception response in negative scenarios
+    //3. Global error handling for custom errors
+    //All of which (negative scenarios) is testable at MVC level. See Controller tests for more info!
+    //All errors are collected and are returned in the response for better summary of error
+
+    //Example in trunk:
+        //public class RegisterCustomerVO
+            //    @NotEmpty
+            //    @Length(max = 64)
+            //    @UsernameValidator
+            //    @CustomerUsernameIsNotRegistered
+            //    private String username;
 
     @Autowired
     private BookRepository repository;
@@ -33,9 +53,13 @@ public class BookController {
         return repository.save(newBook);
     }
 
+
+
     // Find
     @GetMapping("/books/{id}")
-    Book findOne(@PathVariable @Min(1) Long id) {
+    Book findOne(@PathVariable @Min(2) Long id, @RequestParam(required = false) Date arrival
+            , @RequestParam(defaultValue = "7") Integer pageNumber) {
+        System.out.println(pageNumber);
         return repository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException(id));
     }

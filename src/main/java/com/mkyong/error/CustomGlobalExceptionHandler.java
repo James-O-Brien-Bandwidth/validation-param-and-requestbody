@@ -38,12 +38,17 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         response.sendError(HttpStatus.BAD_REQUEST.value());
     }
 
+    //This ties into BEAN validation in the Book class
+    //1. Handles VO variable validations
+    //2. All customer exception handlers like above
+
     // error handle for @Valid
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers,
                                                                   HttpStatus status, WebRequest request) {
 
+        //Add whatever customer response values we want. In this way all VO variable validations are caught and returned her
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", new Date());
         body.put("status", status.value());

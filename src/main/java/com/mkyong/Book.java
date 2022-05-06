@@ -20,6 +20,9 @@ public class Book {
     @NotEmpty(message = "Please provide a name")
     private String name;
 
+    //Custom Author bean added her for validation reference
+    //1. CheckOne ----> @NotEmpty ---> String author must be provided
+    //2. CheckTwo ----> @Author ---> Any custom validations are placed into abstract class
     @Author
     @NotEmpty(message = "Please provide a author")
     private String author;
